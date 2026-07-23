@@ -1,0 +1,12 @@
+:root{
+    --bg:#1A2C38;
+    --panel:#213743;
+    --card:#2F4553;
+    --card-hover:#3A5568;
+    --primary:#1475E1;
+    --primary-hover:#1E86FF;
+    --text:#FFFFFF;
+    --muted:#B1BAD3;
+    --border:#35505F;
+    --radius:12px;
+}
