@@ -21,10 +21,20 @@ const Mines = () => {
   };
 
   const handleTileClick = (id) => {
-    if (!gameStarted) return;
+  if (!gameStarted) return;
 
-    console.log(id);
-  };
+  setBoard((prevBoard) =>
+    prevBoard.map((tile) => {
+      if (tile.id !== id) return tile;
+
+      return {
+        ...tile,
+        revealed: true,
+        type: tile.mine ? "mine" : "gem",
+      };
+    })
+  );
+};
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center gap-8">
