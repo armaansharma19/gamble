@@ -2,12 +2,16 @@ import { useState } from "react";
 
 import createBoard from "../utils/createBoard";
 import placeMines from "../utils/placeMines";
+import calculateMultiplier from "../utils/calculateMultiplier";
 
 export default function useMinesGame() {
   const [board, setBoard] = useState(createBoard());
 
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+
+  // Wallet
+  const [balance, setBalance] = useState(10000);
 
   // Game Settings
   const [betAmount, setBetAmount] = useState(100);
@@ -18,6 +22,21 @@ export default function useMinesGame() {
   const [multiplier, setMultiplier] = useState(1);
 
   const startGame = () => {
+    if (betAmount <= 0) {
+      alert("Bet amount must be greater than 0.");
+      return;
+    }
+
+    if (mineCount < 1 || mineCount > 24) {
+      alert("Mine count must be between 1 and 24.");
+      return;
+    }
+
+    if (betAmount > balance) {
+      alert("Insufficient balance!");
+      return;
+    }
+
     const freshBoard = createBoard();
     const newBoard = placeMines(freshBoard, mineCount);
 
@@ -27,6 +46,9 @@ export default function useMinesGame() {
 
     setGemsFound(0);
     setMultiplier(1);
+
+    // Deduct bet
+    setBalance((prev) => prev - betAmount);
   };
 
   const revealTile = (id) => {
@@ -36,7 +58,7 @@ export default function useMinesGame() {
 
     if (!clickedTile || clickedTile.revealed) return;
 
-    // Mine Clicked
+    // Mine clicked
     if (clickedTile.mine) {
       const revealedBoard = board.map((tile) => ({
         ...tile,
@@ -49,7 +71,7 @@ export default function useMinesGame() {
       return;
     }
 
-    // Gem Clicked
+    // Gem clicked
     const updatedBoard = board.map((tile) =>
       tile.id === id
         ? {
@@ -62,10 +84,10 @@ export default function useMinesGame() {
 
     setBoard(updatedBoard);
 
-    const newGems = gemsFound + 1;
-    setGemsFound(newGems);
+    const newGemCount = gemsFound + 1;
 
-    setMultiplier(Number((1 + newGems * 0.2).toFixed(2)));
+    setGemsFound(newGemCount);
+    setMultiplier(calculateMultiplier(mineCount, newGemCount));
   };
 
   const cashOut = () => {
@@ -81,7 +103,9 @@ export default function useMinesGame() {
 
     const payout = betAmount * multiplier;
 
-    alert(`You cashed out!\n\nPayout: ₹${payout.toFixed(2)}`);
+    setBalance((prev) => prev + payout);
+
+    alert(`You cashed out!\n\nPayout: £${payout.toFixed(2)}`);
 
     setGameOver(true);
   };
@@ -100,6 +124,8 @@ export default function useMinesGame() {
 
     gameStarted,
     gameOver,
+
+    balance,
 
     betAmount,
     setBetAmount,

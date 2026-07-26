@@ -8,26 +8,28 @@ import MineGrid from "../components/mines/MineGrid";
 import useMinesGame from "../hooks/useMinesGame";
 
 const Mines = () => {
- const {
-  board,
+  const {
+    board,
 
-  gameStarted,
-  gameOver,
+    gameStarted,
+    gameOver,
 
-  betAmount,
-  setBetAmount,
+    balance,
 
-  mineCount,
-  setMineCount,
+    betAmount,
+    setBetAmount,
 
-  gemsFound,
-  multiplier,
+    mineCount,
+    setMineCount,
 
-  startGame,
-  revealTile,
-  cashOut,
-  resetGame,
-} = useMinesGame();
+    gemsFound,
+    multiplier,
+
+    startGame,
+    revealTile,
+    cashOut,
+    resetGame,
+  } = useMinesGame();
 
   const handleButtonClick = () => {
     if (!gameStarted) {
@@ -35,7 +37,7 @@ const Mines = () => {
     } else if (gameOver) {
       resetGame();
     } else {
-      alert("Cash Out coming soon!");
+      cashOut();
     }
   };
 
@@ -49,14 +51,20 @@ const Mines = () => {
         <GameLayout
           left={
             <BetPanel
+              balance={balance}
+
               betAmount={betAmount}
               setBetAmount={setBetAmount}
+
               mineCount={mineCount}
               setMineCount={setMineCount}
+
               gemsFound={gemsFound}
               multiplier={multiplier}
+
               gameStarted={gameStarted}
               gameOver={gameOver}
+
               onButtonClick={handleButtonClick}
             />
           }
