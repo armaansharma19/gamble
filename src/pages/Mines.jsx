@@ -1,56 +1,49 @@
-import { useState } from "react";
-
 import MineGrid from "../components/mines/MineGrid";
-
-import createBoard from "../utils/createBoard";
-import placeMines from "../utils/placeMines";
+import useMinesGame from "../hooks/useMinesGame";
 
 const Mines = () => {
-  const [board, setBoard] = useState(createBoard());
+  const {
+    board,
+    gameStarted,
+    gameOver,
+    startGame,
+    revealTile,
+    resetGame,
+  } = useMinesGame();
 
-  const [gameStarted, setGameStarted] = useState(false);
-
-  const startGame = () => {
-    const newBoard = placeMines(board, 5);
-
-    setBoard(newBoard);
-
-    setGameStarted(true);
-
-    console.log(newBoard);
+  const handleButtonClick = () => {
+    if (!gameStarted) {
+      startGame();
+    } else if (gameOver) {
+      resetGame();
+    } else {
+      alert("Cash Out coming soon!");
+    }
   };
 
-  const handleTileClick = (id) => {
-  if (!gameStarted) return;
-
-  setBoard((prevBoard) =>
-    prevBoard.map((tile) => {
-      if (tile.id !== id) return tile;
-
-      return {
-        ...tile,
-        revealed: true,
-        type: tile.mine ? "mine" : "gem",
-      };
-    })
-  );
-};
-
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex flex-col items-center justify-center gap-8">
-
+    <div className="min-h-screen bg-[#1A2C38] flex flex-col items-center justify-center gap-8">
       <button
-        onClick={startGame}
-        className="bg-blue-500 px-8 py-3 rounded-xl font-bold"
+        onClick={handleButtonClick}
+        className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-xl font-bold text-white"
       >
-        Bet
+        {!gameStarted
+          ? "Bet"
+          : gameOver
+          ? "Play Again"
+          : "Cash Out"}
       </button>
 
       <MineGrid
         board={board}
-        onTileClick={handleTileClick}
+        onTileClick={revealTile}
       />
 
+      {gameOver && (
+        <h2 className="text-red-500 text-2xl font-bold">
+          💣 Game Over
+        </h2>
+      )}
     </div>
   );
 };
