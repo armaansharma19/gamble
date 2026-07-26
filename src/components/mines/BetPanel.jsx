@@ -1,50 +1,62 @@
-const BetPanel = () => {
+const BetPanel = ({
+  betAmount,
+  setBetAmount,
+  mineCount,
+  setMineCount,
+  gemsFound,
+  multiplier,
+  gameStarted,
+  gameOver,
+  onButtonClick,
+}) => {
   return (
-    <div className="w-[340px] bg-[#213743] rounded-xl p-5 h-fit">
+    <div className="w-80 bg-[#213743] rounded-xl p-5 flex flex-col gap-5 self-start">
 
-      <div className="flex bg-[#1A2C38] rounded-xl p-1 mb-6">
-        <button className="flex-1 py-2 rounded-lg bg-[#2F4553] font-semibold">
-          Manual
-        </button>
+      <div>
+        <label className="block text-sm text-gray-300 mb-2">
+          Bet Amount
+        </label>
 
-        <button className="flex-1 py-2 text-[#B1BAD3] hover:text-white transition">
-          Auto
-        </button>
+        <input
+          type="number"
+          value={betAmount}
+          disabled={gameStarted && !gameOver}
+          onChange={(e) => setBetAmount(Number(e.target.value))}
+          className="w-full bg-[#0F212E] rounded-lg px-4 py-3 outline-none"
+        />
       </div>
 
-      <div className="space-y-5">
+      <div>
+        <label className="block text-sm text-gray-300 mb-2">
+          Mines
+        </label>
 
-        <div>
-          <label className="text-[#B1BAD3] text-sm">
-            Bet Amount
-          </label>
-
-          <input
-            type="number"
-            placeholder="$0.00"
-            className="mt-2 w-full bg-[#1A2C38] rounded-lg p-3 outline-none"
-          />
-        </div>
-
-        <div>
-          <label className="text-[#B1BAD3] text-sm">
-            Mines
-          </label>
-
-          <select
-            className="mt-2 w-full bg-[#1A2C38] rounded-lg p-3 outline-none"
-          >
-            {Array.from({ length: 24 }, (_, i) => (
-              <option key={i + 1}>{i + 1}</option>
-            ))}
-          </select>
-        </div>
-
-        <button className="w-full bg-[#1475E1] hover:bg-[#1B82F1] py-3 rounded-lg font-semibold transition">
-          Bet
-        </button>
-
+        <input
+          type="number"
+          min="1"
+          max="24"
+          value={mineCount}
+          disabled={gameStarted && !gameOver}
+          onChange={(e) => setMineCount(Number(e.target.value))}
+          className="w-full bg-[#0F212E] rounded-lg px-4 py-3 outline-none"
+        />
       </div>
+
+      <div className="bg-[#0F212E] rounded-lg p-4">
+        <p>💎 Gems Found: {gemsFound}</p>
+        <p className="mt-2">✖ Multiplier: {multiplier}x</p>
+      </div>
+
+      <button
+        onClick={onButtonClick}
+        className="bg-green-500 hover:bg-green-600 transition rounded-lg py-3 font-bold"
+      >
+        {!gameStarted
+          ? "Bet"
+          : gameOver
+          ? "Play Again"
+          : "Cash Out"}
+      </button>
 
     </div>
   );
