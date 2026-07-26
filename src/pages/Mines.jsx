@@ -1,31 +1,81 @@
-import { useState } from "react";
+import Navbar from "../components/Layout/Navbar";
+import Sidebar from "../components/Layout/Sidebar";
+import GameLayout from "../components/Layout/GameLayout";
 
+import BetPanel from "../components/mines/BetPanel";
 import MineGrid from "../components/mines/MineGrid";
-import createBoard from "../utils/createBoard";
+
+import useMinesGame from "../hooks/useMinesGame";
 
 const Mines = () => {
-  const [board, setBoard] = useState(createBoard());
+  const {
+    board,
 
-  const handleTileClick = (id) => {
-    setBoard((prev) =>
-      prev.map((tile) =>
-        tile.id === id
-          ? {
-              ...tile,
-              revealed: true,
-              type: "gem",
-            }
-          : tile
-      )
-    );
+    gameStarted,
+    gameOver,
+
+    balance,
+
+    betAmount,
+    setBetAmount,
+
+    mineCount,
+    setMineCount,
+
+    gemsFound,
+    multiplier,
+
+    startGame,
+    revealTile,
+    cashOut,
+    resetGame,
+  } = useMinesGame();
+
+  const handleButtonClick = () => {
+    if (!gameStarted) {
+      startGame();
+    } else if (gameOver) {
+      resetGame();
+    } else {
+      cashOut();
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center">
-      <MineGrid
-        board={board}
-        onTileClick={handleTileClick}
-      />
+    <div className="h-screen bg-[#1A2C38] flex flex-col text-white">
+      <Navbar />
+
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+
+        <GameLayout
+          left={
+            <BetPanel
+              balance={balance}
+
+              betAmount={betAmount}
+              setBetAmount={setBetAmount}
+
+              mineCount={mineCount}
+              setMineCount={setMineCount}
+
+              gemsFound={gemsFound}
+              multiplier={multiplier}
+
+              gameStarted={gameStarted}
+              gameOver={gameOver}
+
+              onButtonClick={handleButtonClick}
+            />
+          }
+          right={
+            <MineGrid
+              board={board}
+              onTileClick={revealTile}
+            />
+          }
+        />
+      </div>
     </div>
   );
 };
