@@ -1,24 +1,32 @@
 const Tile = ({ tile, onClick }) => {
-  let bg = "bg-[#2F4553]";
-  let content = "";
-
-  if (tile.revealed) {
-    if (tile.type === "gem") {
-      bg = "bg-green-500";
-      content = "💎";
-    } else if (tile.type === "mine") {
-      bg = "bg-red-500";
-      content = "💣";
+  const handleClick = () => {
+    if (!tile.revealed) {
+      onClick();
     }
-  }
+  };
 
   return (
-    <div
-      onClick={onClick}
-      className={`w-24 h-24 rounded-xl shadow-md flex items-center justify-center text-4xl cursor-pointer transition-all duration-200 hover:scale-105 ${bg}`}
+    <button
+      onClick={handleClick}
+      disabled={tile.revealed}
+      className={`
+        w-28 h-28 rounded-xl
+        flex items-center justify-center
+        text-3xl font-bold
+        transition-all duration-300
+        select-none
+
+        ${
+          tile.revealed
+            ? tile.mine
+              ? "bg-red-600"
+              : "bg-green-600"
+            : "bg-[#2F4553] hover:bg-[#3A5565] hover:-translate-y-1 active:scale-95"
+        }
+      `}
     >
-      {content}
-    </div>
+      {tile.revealed && (tile.mine ? "💣" : "💎")}
+    </button>
   );
 };
 

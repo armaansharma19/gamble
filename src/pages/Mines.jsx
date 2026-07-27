@@ -5,6 +5,8 @@ import GameLayout from "../components/Layout/GameLayout";
 import BetPanel from "../components/mines/BetPanel";
 import MineGrid from "../components/mines/MineGrid";
 
+import ResultModal from "../components/ui/ResultModal";
+
 import useMinesGame from "../hooks/useMinesGame";
 
 const Mines = () => {
@@ -25,6 +27,8 @@ const Mines = () => {
     gemsFound,
     multiplier,
 
+    gameResult,
+
     startGame,
     revealTile,
     cashOut,
@@ -43,28 +47,25 @@ const Mines = () => {
 
   return (
     <div className="h-screen bg-[#1A2C38] flex flex-col text-white">
+
       <Navbar />
 
       <div className="flex flex-1 overflow-hidden">
+
         <Sidebar />
 
         <GameLayout
           left={
             <BetPanel
               balance={balance}
-
               betAmount={betAmount}
               setBetAmount={setBetAmount}
-
               mineCount={mineCount}
               setMineCount={setMineCount}
-
               gemsFound={gemsFound}
               multiplier={multiplier}
-
               gameStarted={gameStarted}
               gameOver={gameOver}
-
               onButtonClick={handleButtonClick}
             />
           }
@@ -75,7 +76,14 @@ const Mines = () => {
             />
           }
         />
+
       </div>
+
+      <ResultModal
+        result={gameResult}
+        onClose={resetGame}
+      />
+
     </div>
   );
 };
